@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { fetchData } from "./api/axios";
 import { Table } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 const TeamStats = () => {
   const [teamStats, setTeamStats] = useState([]);
 
-  useEffect(() => {
-    fetchData("/teams", { league: "39", season: "2022" })
+  const getTeams = async () => {
+    await fetchData("/teams", { league: "39", season: "2022" })
       .then((response) => {
         setTeamStats(response.data.response);
       })
       .catch((error) => {
         console.error(error);
       });
+  };
+
+  useEffect(() => {
+    getTeams();
   }, []);
 
   return (
@@ -29,12 +34,14 @@ const TeamStats = () => {
         </thead>
         <tbody>
           {teamStats.map((team, i) => (
-            <tr>
+            <tr key={team.team.id}>
               <td>{i + 1}</td>
               <td>
                 <img src={`${team.team.logo}`} alt="logo" />
               </td>
-              <td>{team.team.name}</td>
+              <td>
+                <Link to={`/teams/${team.team.name}`}>{team.team.name}</Link>
+              </td>
               <td>{team.team.founded}</td>
               <td>{team.venue.name}</td>
             </tr>
