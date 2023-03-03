@@ -1,21 +1,49 @@
 import React, { useState, useEffect } from "react";
 import { fetchData } from "./api/axios";
+import { Table } from "react-bootstrap";
 
 const TeamStats = () => {
-  const [teamStats, setTeamStats] = useState(null);
+  const [teamStats, setTeamStats] = useState([]);
 
   useEffect(() => {
-    fetchData("/teams/statistics", { league: "20", season: "2020", team: "20" })
+    fetchData("/teams", { league: "39", season: "2022" })
       .then((response) => {
-        setTeamStats(response.data);
-        console.log(teamStats.response.team.name);
+        setTeamStats(response.data.response);
       })
       .catch((error) => {
         console.error(error);
       });
   }, []);
 
-  return <></>;
+  return (
+    <>
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>Lp.</th>
+            <th>Logo</th>
+            <th>Nazwa</th>
+            <th>Rok założenia</th>
+            <th>Stadion</th>
+          </tr>
+        </thead>
+        <tbody>
+          {teamStats.map((team, i) => (
+            <tr>
+              <td>{i + 1}</td>
+              <td>
+                <img src={`${team.team.logo}`} alt="logo" />
+              </td>
+              <td>{team.team.name}</td>
+              <td>{team.team.founded}</td>
+              <td>{team.venue.name}</td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+      {/* <div>{JSON.stringify(teamStats, null, 4)}</div> */}
+    </>
+  );
 };
 
 export default TeamStats;
