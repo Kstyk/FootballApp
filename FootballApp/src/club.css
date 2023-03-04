@@ -1,0 +1,12 @@
+.club {
+  display: flex;
+  flex-direction: row;
+}
+
+.left {
+  width: 30%;
+}
+
+.right {
+  width: 70%;
+}

@@ -4,12 +4,12 @@ import { Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 const TeamStats = () => {
-  const [teamStats, setTeamStats] = useState([]);
+  const [teams, setTeams] = useState([]);
 
   const getTeams = async () => {
     await fetchData("/teams", { league: "39", season: "2022" })
       .then((response) => {
-        setTeamStats(response.data.response);
+        setTeams(response.data.response);
       })
       .catch((error) => {
         console.error(error);
@@ -33,14 +33,19 @@ const TeamStats = () => {
           </tr>
         </thead>
         <tbody>
-          {teamStats.map((team, i) => (
+          {teams.map((team, i) => (
             <tr key={team.team.id}>
               <td>{i + 1}</td>
               <td>
                 <img src={`${team.team.logo}`} alt="logo" />
               </td>
               <td>
-                <Link to={`/teams/${team.team.name}`}>{team.team.name}</Link>
+                <Link
+                  to={`/teams/${team.team.name}`}
+                  state={{ id: `${team.team.id}` }}
+                >
+                  {team.team.name}
+                </Link>
               </td>
               <td>{team.team.founded}</td>
               <td>{team.venue.name}</td>
